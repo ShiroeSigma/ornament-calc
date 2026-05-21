@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ornament Value Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #d4af37;
+            --bg: #f8f9fa;
+            --text: #212529;
+            --border: #dee2e6;
+            --danger: #dc3545;
+            --success-text: #2e7d32;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('bgpic.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            padding: 15px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        /* Desktop Left/Right Layout */
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .main-wrapper {
+                grid-template-columns: 60% 38%; 
+            }
+        }
+
+        /* Glassmorphism Box Style */
+        .box {
+            background-color: rgba(255, 255, 255, 0.92);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .sticky-results {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.6em;
+            font-weight: 700;
+        }
+
+        .datetime {
+            text-align: center;
+            font-size: 0.9em;
+            color: #495057;
+            font-weight: 500;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            background: #ffffff;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #343a40;
+            font-size: 0.95em;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px; 
+            background-color: #fff;
+            transition: border-color 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+
+        .readonly-text {
+            background-color: #e9ecef !important;
+            color: #495057;
+            font-weight: bold;
+        }
+        
+        /* RESULTS SECTION STYLING */
+        .results-section {
+            background: rgba(232, 245, 233, 0.7);
+            border: 1px solid #c8e6c9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        .result-row.total {
+            font-size: 1.4em;
+            font-weight: 800;
+            color: var(--success-text);
+            border-top: 2px dashed #a5d6a7;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: transparent;
+            color: var(--danger);
+            border: 2px solid var(--danger);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .reset-btn:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    
+    <div class="box inputs-column">
+        <h2>Ornament Value Calculator</h2>
+        <div id="datetime" class="datetime">Loading time...</div>
+
+        <div class="input-group">
+            <label>Today's gold rate 22K916 (per 10g)</label>
+            <input type="number" id="rate22k" placeholder="Enter rate..." oninput="handleInput()">
+        </div>
+        
+        <div class="input-group">
+            <label>Today's gold rate 18K750 (per 10g)</label>
+            <input type="number" id="rate18k" placeholder="Enter rate..." oninput="handleInput()">
+        </div>
+
+        <div class="input-group">
+            <label>Type of Ornament</label>
+            <select id="ornamentType" onchange="handleOrnamentChange()">
+                <option value="gold" selected>Only gold</option>
+                <option value="sankha">Sankha</option>
+                <option value="others">Others</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Pieces</label>
+            <select id="pieces" onchange="handlePiecesChange()">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Carat</label>
+            <select id="carat" onchange="handleCaratChange()">
+                <option value="22K916" selected>22K916</option>
+                <option value="18K750">18K750</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Category</label>
+            <select id="category" onchange="handleInput()">
+                <option value="greater" selected>Greater than 1Gm</option>
+                <option value="less">Less than 1gm</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Weight (Grams)</label>
+            <input type="number" id="weight" step="0.001" placeholder="e.g. 5.370" oninput="handleInput()">
+        </div>
+
+        <div class="input-group">
+            <label>MC (Making Charge)</label>
+            <input type="number" id="mc" value="1999" oninput="handleInput()">
+        </div>
+
+        <div class="input-group">
+            <label>Hallmark Charges</label>
+            <input type="number" id="hm" class="readonly-text" readonly value="150">
+        </div>
+
+        <div class="input-group">
+            <label>Other Charges</label>
+            <input type="number" id="otherCharges" value="0" oninput="handleInput()">
+        </div>
+    </div>
+
+    <div class="box sticky-results">
+        <h2 style="color: var(--success-text);">Final Calculation</h2>
+        
+        <div class="results-section">
+            <div class="result-row">
+                <span>Value b4 GST:</span>
+                <span id="outBaseValue">₹ 0.00</span>
+            </div>
+            <div class="result-row">
+                <span>GST (3%):</span>
+                <span id="outGst">₹ 0.00</span>
+            </div>
+            <div class="result-row total">
+                <span>Total:</span>
+                <span id="outTotal">₹ 0.00</span>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="clearAllData()">Clear All Data</button>
+    </div>
+
+</div>
+
+<script>
+    // 1. Live Clock
+    function updateDateTime() {
+        const now = new Date();
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('datetime').innerText = now.toLocaleDateString(undefined, dateOptions) + ' | ' + now.toLocaleTimeString(undefined, timeOptions);
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // 2. Load Saved Data on Startup
+    window.onload = function() {
+        // Load text inputs
+        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'otherCharges'];
+        inputs.forEach(id => {
+            const saved = localStorage.getItem(id);
+            if(saved !== null) document.getElementById(id).value = saved;
+        });
+
+        // Load dropdowns
+        const selects = ['ornamentType', 'pieces', 'carat', 'category'];
+        selects.forEach(id => {
+            const saved = localStorage.getItem(id);
+            if(saved !== null) document.getElementById(id).value = saved;
+        });
+
+        // Initialize dynamic fields based on saved data
+        handlePiecesChange(false); 
+        calculate();
+    };
+
+    // 3. Dynamic Field Handlers
+    function handlePiecesChange(triggerSave = true) {
+        const pieces = document.getElementById('pieces').value;
+        document.getElementById('hm').value = (pieces === "1") ? 100 : 150;
+        if(triggerSave) handleInput();
+    }
+
+    function handleCaratChange() {
+        // Snaps the Making Charge but allows manual override
+        const carat = document.getElementById('carat').value;
+        document.getElementById('mc').value = (carat === "22K916") ? 1999 : 1499;
+        handleInput();
+    }
+
+    function handleOrnamentChange() {
+        // Snaps the Other Charges based on Ornament Type, allows manual override
+        const type = document.getElementById('ornamentType').value;
+        const otherInput = document.getElementById('otherCharges');
+        
+        if (type === "gold") {
+            otherInput.value = 0;
+        } else if (type === "sankha") {
+            otherInput.value = 350;
+        } else if (type === "others") {
+            otherInput.value = 450;
+        }
+        handleInput();
+    }
+
+    // 4. Handle Saves & Trigger Calculation
+    function handleInput() {
+        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'otherCharges'];
+        inputs.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
+
+        const selects = ['ornamentType', 'pieces', 'carat', 'category'];
+        selects.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
+
+        calculate();
+    }
+
+    function clearAllData() {
+        if(confirm("Are you sure you want to clear all rates and reset the calculator?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // 5. Core Calculation Logic
+    function calculate() {
+        const carat = document.getElementById('carat').value;
+        const category = document.getElementById('category').value;
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const mc = parseFloat(document.getElementById('mc').value) || 0;
+        const hm = parseFloat(document.getElementById('hm').value) || 0;
+        const otherCharge = parseFloat(document.getElementById('otherCharges').value) || 0;
+
+        // Fetch 10g Rate and convert to 1g Rate
+        let rate10g = 0;
+        if (carat === "22K916") {
+            rate10g = parseFloat(document.getElementById('rate22k').value) || 0;
+        } else {
+            rate10g = parseFloat(document.getElementById('rate18k').value) || 0;
+        }
+        const rate1g = rate10g / 10;
+
+        // Calculation Process
+        let valueBeforeGST = 0;
+
+        if (weight > 0) {
+            if (category === "greater") {
+                // Formula 1: Greater than 1gm
+                valueBeforeGST = ((rate1g + mc) * weight) + hm + otherCharge;
+            } else {
+                // Formula 2: Less than 1gm
+                valueBeforeGST = (rate1g * weight) + mc + hm + otherCharge;
+            }
+        }
+
+        // GST & Total
+        const gst = valueBeforeGST > 0 ? (valueBeforeGST * 0.03) : 0;
+        const total = valueBeforeGST + gst;
+
+        // Format and Display
+        const formatMoney = (amt) => "₹ " + amt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        
+        document.getElementById('outBaseValue').innerText = formatMoney(valueBeforeGST);
+        document.getElementById('outGst').innerText = formatMoney(gst);
+        document.getElementById('outTotal').innerText = formatMoney(total);
+    }
+</script>
+
+</body>
+</html>
