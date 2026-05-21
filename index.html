@@ -221,14 +221,6 @@
         </div>
 
         <div class="input-group">
-            <label>Category</label>
-            <select id="category" onchange="handleInput()">
-                <option value="greater" selected>Greater than 1Gm</option>
-                <option value="less">Less than 1gm</option>
-            </select>
-        </div>
-
-        <div class="input-group">
             <label>Weight (Grams)</label>
             <input type="number" id="weight" step="0.001" placeholder="e.g. 5.370" oninput="handleInput()">
         </div>
@@ -310,7 +302,7 @@
             if(saved !== null) document.getElementById(id).value = saved;
         });
 
-        const selects = ['ornamentType', 'pieces', 'carat', 'category'];
+        const selects = ['ornamentType', 'pieces', 'carat'];
         selects.forEach(id => {
             const saved = localStorage.getItem(id);
             if(saved !== null) document.getElementById(id).value = saved;
@@ -352,7 +344,7 @@
         const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'otherCharges'];
         inputs.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
 
-        const selects = ['ornamentType', 'pieces', 'carat', 'category'];
+        const selects = ['ornamentType', 'pieces', 'carat'];
         selects.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
 
         calculate();
@@ -365,10 +357,9 @@
         }
     }
 
-    // 5. Core Calculation Logic with Breakdown
+    // 5. Core Calculation Logic with Backend Weight Category evaluation
     function calculate() {
         const carat = document.getElementById('carat').value;
-        const category = document.getElementById('category').value;
         const weight = parseFloat(document.getElementById('weight').value) || 0;
         const mc = parseFloat(document.getElementById('mc').value) || 0;
         const hm = parseFloat(document.getElementById('hm').value) || 0;
@@ -388,13 +379,14 @@
         let valueBeforeGST = 0;
 
         if (weight > 0) {
-            if (category === "greater") {
-                // Formula 1: ((rate1g + mc) * weight) + hm + otherCharge
+            // AUTOMATIC BACKGROUND CATEGORY LOGIC
+            if (weight > 1) {
+                // Formula 1: Weight Greater than 1gm
                 goldValue = rate1g * weight;
                 totalMakingCharge = mc * weight; 
                 valueBeforeGST = goldValue + totalMakingCharge + hm + otherCharge;
             } else {
-                // Formula 2: (rate1g * weight) + mc + hm + otherCharge
+                // Formula 2: Weight Less than or equal to 1gm
                 goldValue = rate1g * weight;
                 totalMakingCharge = mc; // Applied as a flat amount
                 valueBeforeGST = goldValue + totalMakingCharge + hm + otherCharge;
