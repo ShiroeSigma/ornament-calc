@@ -132,9 +132,21 @@
         .result-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-size: 1.05em;
             font-weight: 500;
+        }
+        .breakdown-row {
+            font-size: 0.95em;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        .subtotal-row {
+            border-top: 1px solid #a5d6a7;
+            padding-top: 12px;
+            margin-top: 12px;
+            font-weight: 700;
+            color: #212529;
         }
         .result-row.total {
             font-size: 1.4em;
@@ -241,16 +253,35 @@
         <h2 style="color: var(--success-text);">Final Calculation</h2>
         
         <div class="results-section">
-            <div class="result-row">
-                <span>Value b4 GST:</span>
+            <div class="result-row breakdown-row">
+                <span>Gold Value:</span>
+                <span id="outGoldValue">₹ 0.00</span>
+            </div>
+            <div class="result-row breakdown-row">
+                <span>Making Charge:</span>
+                <span id="outMakingCharge">₹ 0.00</span>
+            </div>
+            <div class="result-row breakdown-row">
+                <span>Hallmark Charge:</span>
+                <span id="outHallmarkCharge">₹ 0.00</span>
+            </div>
+            <div class="result-row breakdown-row">
+                <span>Other Charge:</span>
+                <span id="outOtherCharge">₹ 0.00</span>
+            </div>
+            
+            <div class="result-row subtotal-row">
+                <span>Value Before GST:</span>
                 <span id="outBaseValue">₹ 0.00</span>
             </div>
+            
             <div class="result-row">
                 <span>GST (3%):</span>
                 <span id="outGst">₹ 0.00</span>
             </div>
+            
             <div class="result-row total">
-                <span>Total:</span>
+                <span>Final Value:</span>
                 <span id="outTotal">₹ 0.00</span>
             </div>
         </div>
@@ -273,21 +304,18 @@
 
     // 2. Load Saved Data on Startup
     window.onload = function() {
-        // Load text inputs
         const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'otherCharges'];
         inputs.forEach(id => {
             const saved = localStorage.getItem(id);
             if(saved !== null) document.getElementById(id).value = saved;
         });
 
-        // Load dropdowns
         const selects = ['ornamentType', 'pieces', 'carat', 'category'];
         selects.forEach(id => {
             const saved = localStorage.getItem(id);
             if(saved !== null) document.getElementById(id).value = saved;
         });
 
-        // Initialize dynamic fields based on saved data
         handlePiecesChange(false); 
         calculate();
     };
@@ -300,14 +328,12 @@
     }
 
     function handleCaratChange() {
-        // Snaps the Making Charge but allows manual override
         const carat = document.getElementById('carat').value;
         document.getElementById('mc').value = (carat === "22K916") ? 1999 : 1499;
         handleInput();
     }
 
     function handleOrnamentChange() {
-        // Snaps the Other Charges based on Ornament Type, allows manual override
         const type = document.getElementById('ornamentType').value;
         const otherInput = document.getElementById('otherCharges');
         
@@ -339,7 +365,7 @@
         }
     }
 
-    // 5. Core Calculation Logic
+    // 5. Core Calculation Logic with Breakdown
     function calculate() {
         const carat = document.getElementById('carat').value;
         const category = document.getElementById('category').value;
@@ -348,7 +374,6 @@
         const hm = parseFloat(document.getElementById('hm').value) || 0;
         const otherCharge = parseFloat(document.getElementById('otherCharges').value) || 0;
 
-        // Fetch 10g Rate and convert to 1g Rate
         let rate10g = 0;
         if (carat === "22K916") {
             rate10g = parseFloat(document.getElementById('rate22k').value) || 0;
@@ -357,16 +382,22 @@
         }
         const rate1g = rate10g / 10;
 
-        // Calculation Process
+        // Variables for the breakdown
+        let goldValue = 0;
+        let totalMakingCharge = 0;
         let valueBeforeGST = 0;
 
         if (weight > 0) {
             if (category === "greater") {
-                // Formula 1: Greater than 1gm
-                valueBeforeGST = ((rate1g + mc) * weight) + hm + otherCharge;
+                // Formula 1: ((rate1g + mc) * weight) + hm + otherCharge
+                goldValue = rate1g * weight;
+                totalMakingCharge = mc * weight; 
+                valueBeforeGST = goldValue + totalMakingCharge + hm + otherCharge;
             } else {
-                // Formula 2: Less than 1gm
-                valueBeforeGST = (rate1g * weight) + mc + hm + otherCharge;
+                // Formula 2: (rate1g * weight) + mc + hm + otherCharge
+                goldValue = rate1g * weight;
+                totalMakingCharge = mc; // Applied as a flat amount
+                valueBeforeGST = goldValue + totalMakingCharge + hm + otherCharge;
             }
         }
 
@@ -376,6 +407,11 @@
 
         // Format and Display
         const formatMoney = (amt) => "₹ " + amt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        
+        document.getElementById('outGoldValue').innerText = formatMoney(goldValue);
+        document.getElementById('outMakingCharge').innerText = formatMoney(totalMakingCharge);
+        document.getElementById('outHallmarkCharge').innerText = formatMoney(weight > 0 ? hm : 0);
+        document.getElementById('outOtherCharge').innerText = formatMoney(weight > 0 ? otherCharge : 0);
         
         document.getElementById('outBaseValue').innerText = formatMoney(valueBeforeGST);
         document.getElementById('outGst').innerText = formatMoney(gst);
