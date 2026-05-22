@@ -200,6 +200,8 @@
             <select id="ornamentType" onchange="handleOrnamentChange()">
                 <option value="gold" selected>Only gold</option>
                 <option value="sankha">Sankha</option>
+                <option value="sankha_ring">Sankha Ring</option>
+                <option value="bronze">Bronze</option>
                 <option value="others">Others</option>
             </select>
         </div>
@@ -273,7 +275,7 @@
             </div>
             
             <div class="result-row total">
-                <span>Final Value:</span>
+                <span>Ornament Value:</span>
                 <span id="outTotal">₹ 0.00</span>
             </div>
         </div>
@@ -294,7 +296,7 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-    // 2. Load Saved Data on Startup
+    // 2. Load Saved Data & Setup Enter Key Navigation on Startup
     window.onload = function() {
         const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'otherCharges'];
         inputs.forEach(id => {
@@ -310,12 +312,37 @@
 
         handlePiecesChange(false); 
         calculate();
+
+        // 🌟 ENTER KEY TO TAB FUNCTIONALITY 🌟
+        // Grabs all inputs and selects on the left side that you can interact with
+        const focusableElements = document.querySelectorAll('.inputs-column input:not([readonly]), .inputs-column select');
+        focusableElements.forEach((el, index) => {
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Stop default enter behavior
+                    const nextElement = focusableElements[index + 1];
+                    if (nextElement) {
+                        nextElement.focus();
+                    } else {
+                        el.blur(); // Unfocuses if it's the very last box
+                    }
+                }
+            });
+        });
     };
 
     // 3. Dynamic Field Handlers
     function handlePiecesChange(triggerSave = true) {
         const pieces = document.getElementById('pieces').value;
-        document.getElementById('hm').value = (pieces === "1") ? 100 : 150;
+        const type = document.getElementById('ornamentType').value;
+        
+        // If Bronze is selected, Hallmark strictly stays 0
+        if (type === "bronze") {
+            document.getElementById('hm').value = 0;
+        } else {
+            document.getElementById('hm').value = (pieces === "1") ? 100 : 150;
+        }
+
         if(triggerSave) handleInput();
     }
 
@@ -328,11 +355,26 @@
     function handleOrnamentChange() {
         const type = document.getElementById('ornamentType').value;
         const otherInput = document.getElementById('otherCharges');
+        const mcInput = document.getElementById('mc');
+        const hmInput = document.getElementById('hm');
+        const pieces = document.getElementById('pieces').value;
         
+        // Reset Hallmark to standard just in case they are switching OFF of Bronze
+        hmInput.value = (pieces === "1") ? 100 : 150;
+
         if (type === "gold") {
             otherInput.value = 0;
         } else if (type === "sankha") {
-            otherInput.value = 450; // Updated from 350 to 450
+            otherInput.value = 450; 
+        } else if (type === "sankha_ring") {
+            // New Sankha Ring Logic
+            mcInput.value = 1999;
+            otherInput.value = 220;
+        } else if (type === "bronze") {
+            // New Bronze Logic
+            mcInput.value = 1499;
+            otherInput.value = 0;
+            hmInput.value = 0; // HM strictly 0
         } else if (type === "others") {
             otherInput.value = 450;
         }
@@ -357,7 +399,7 @@
         }
     }
 
-    // 5. Core Calculation Logic with Backend Weight Category evaluation
+    // 5. Core Calculation Logic
     function calculate() {
         const carat = document.getElementById('carat').value;
         const weight = parseFloat(document.getElementById('weight').value) || 0;
@@ -379,7 +421,6 @@
         let valueBeforeGST = 0;
 
         if (weight > 0) {
-            // AUTOMATIC BACKGROUND CATEGORY LOGIC
             if (weight > 1) {
                 // Formula 1: Weight Greater than 1gm
                 goldValue = rate1g * weight;
