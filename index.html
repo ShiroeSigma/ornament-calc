@@ -23,7 +23,7 @@
             background-position: center;
             background-attachment: fixed;
             color: var(--text);
-            padding: 15px;
+            padding: 10px;
             margin: 0;
             display: flex;
             justify-content: center;
@@ -35,30 +35,30 @@
         .main-wrapper {
             display: grid;
             grid-template-columns: 1fr; 
-            gap: 20px;
+            gap: 15px;
             max-width: 900px;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         @media (min-width: 768px) {
             .main-wrapper {
-                grid-template-columns: 60% 38%; 
+                grid-template-columns: 58% 40%; 
             }
         }
 
-        /* Glassmorphism Box Style */
+        /* Compact Glassmorphism Box */
         .box {
             background-color: rgba(255, 255, 255, 0.92);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             backdrop-filter: blur(8px);
         }
 
         .sticky-results {
             position: sticky;
-            top: 20px;
+            top: 10px;
             height: fit-content;
         }
 
@@ -67,43 +67,44 @@
             color: var(--primary);
             margin-top: 0;
             margin-bottom: 5px;
-            font-size: 1.6em;
+            font-size: 1.4em;
             font-weight: 700;
         }
 
         .datetime {
             text-align: center;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #495057;
             font-weight: 500;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--primary);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
+        /* Inputs tight spacing */
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             background: #ffffff;
-            padding: 12px 15px;
+            padding: 8px 12px;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 600;
             color: #343a40;
-            font-size: 0.95em;
+            font-size: 0.9em;
         }
 
         input[type="number"], select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 5px;
             box-sizing: border-box;
-            font-size: 16px; 
+            font-size: 15px; 
             background-color: #fff;
             transition: border-color 0.2s;
             font-family: 'Inter', sans-serif;
@@ -125,49 +126,49 @@
         .results-section {
             background: rgba(232, 245, 233, 0.7);
             border: 1px solid #c8e6c9;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
-            margin-top: 15px;
+            margin-top: 10px;
         }
         .result-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 1.05em;
+            margin-bottom: 8px;
+            font-size: 1em;
             font-weight: 500;
         }
         .breakdown-row {
-            font-size: 0.95em;
+            font-size: 0.9em;
             color: #495057;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .subtotal-row {
             border-top: 1px solid #a5d6a7;
-            padding-top: 12px;
-            margin-top: 12px;
+            padding-top: 10px;
+            margin-top: 10px;
             font-weight: 700;
             color: #212529;
         }
         .result-row.total {
-            font-size: 1.4em;
+            font-size: 1.3em;
             font-weight: 800;
             color: var(--success-text);
             border-top: 2px dashed #a5d6a7;
-            padding-top: 15px;
-            margin-top: 10px;
+            padding-top: 12px;
+            margin-top: 8px;
         }
 
         .reset-btn {
             width: 100%;
-            padding: 14px;
+            padding: 10px;
             background-color: transparent;
             color: var(--danger);
             border: 2px solid var(--danger);
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 15px;
             transition: all 0.2s;
             font-family: 'Inter', sans-serif;
         }
@@ -187,12 +188,12 @@
 
         <div class="input-group">
             <label>Today's gold rate 22K916 (per 10g)</label>
-            <input type="number" id="rate22k" placeholder="Enter rate..." oninput="handleInput()">
+            <input type="number" id="rate22k" placeholder="Enter rate..." oninput="rateChanged()">
         </div>
         
         <div class="input-group">
             <label>Today's gold rate 18K750 (per 10g)</label>
-            <input type="number" id="rate18k" placeholder="Enter rate..." oninput="handleInput()">
+            <input type="number" id="rate18k" placeholder="Enter rate..." oninput="rateChanged()">
         </div>
 
         <div class="input-group">
@@ -228,8 +229,16 @@
         </div>
 
         <div class="input-group">
-            <label>MC (Making Charge)</label>
-            <input type="number" id="mc" value="1999" oninput="handleInput()">
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>MC (₹ Amount)</label>
+                    <input type="number" id="mc" value="1999" oninput="syncFromAmount()">
+                </div>
+                <div style="flex: 1;">
+                    <label>MC (%)</label>
+                    <input type="number" id="mcPercent" value="0" step="0.01" oninput="syncFromPercent()">
+                </div>
+            </div>
         </div>
 
         <div class="input-group">
@@ -296,9 +305,9 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-    // 2. Load Saved Data & Setup Enter Key Navigation on Startup
+    // 2. Load Saved Data
     window.onload = function() {
-        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'otherCharges'];
+        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'mcPercent', 'otherCharges'];
         inputs.forEach(id => {
             const saved = localStorage.getItem(id);
             if(saved !== null) document.getElementById(id).value = saved;
@@ -311,32 +320,69 @@
         });
 
         handlePiecesChange(false); 
-        calculate();
+        syncFromAmount(); // Ensure percentage matches the loaded amount
 
-        // 🌟 ENTER KEY TO TAB FUNCTIONALITY 🌟
-        // Grabs all inputs and selects on the left side that you can interact with
+        // Enter Key Tab Functionality (Includes new percentage box)
         const focusableElements = document.querySelectorAll('.inputs-column input:not([readonly]), .inputs-column select');
         focusableElements.forEach((el, index) => {
             el.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
-                    e.preventDefault(); // Stop default enter behavior
+                    e.preventDefault();
                     const nextElement = focusableElements[index + 1];
                     if (nextElement) {
                         nextElement.focus();
                     } else {
-                        el.blur(); // Unfocuses if it's the very last box
+                        el.blur(); 
                     }
                 }
             });
         });
     };
 
+    // --- TWO-WAY BINDING LOGIC FOR MAKING CHARGE ---
+    function getActiveRate1g() {
+        const carat = document.getElementById('carat').value;
+        let rate10g = parseFloat(document.getElementById(carat === '22K916' ? 'rate22k' : 'rate18k').value) || 0;
+        return rate10g / 10;
+    }
+
+    // Called when the ₹ Amount box is edited
+    function syncFromAmount() {
+        const rate1g = getActiveRate1g();
+        const mcAmt = parseFloat(document.getElementById('mc').value) || 0;
+        
+        if (rate1g > 0) {
+            const percent = (mcAmt / rate1g) * 100;
+            document.getElementById('mcPercent').value = percent.toFixed(2);
+        } else {
+            document.getElementById('mcPercent').value = 0;
+        }
+        handleInput(); // Save and calculate
+    }
+
+    // Called when the % box is edited
+    function syncFromPercent() {
+        const rate1g = getActiveRate1g();
+        const mcPct = parseFloat(document.getElementById('mcPercent').value) || 0;
+        
+        if (rate1g > 0) {
+            const amount = (mcPct / 100) * rate1g;
+            document.getElementById('mc').value = amount.toFixed(2);
+        }
+        handleInput(); // Save and calculate
+    }
+
+    // Called when Gold Rates are changed (keeps the ₹ Amount fixed and auto-adjusts the %)
+    function rateChanged() {
+        syncFromAmount();
+    }
+    // ------------------------------------------------
+
     // 3. Dynamic Field Handlers
     function handlePiecesChange(triggerSave = true) {
         const pieces = document.getElementById('pieces').value;
         const type = document.getElementById('ornamentType').value;
         
-        // If Bronze is selected, Hallmark strictly stays 0
         if (type === "bronze") {
             document.getElementById('hm').value = 0;
         } else {
@@ -349,7 +395,7 @@
     function handleCaratChange() {
         const carat = document.getElementById('carat').value;
         document.getElementById('mc').value = (carat === "22K916") ? 1999 : 1499;
-        handleInput();
+        syncFromAmount(); // Updates % and calls handleInput
     }
 
     function handleOrnamentChange() {
@@ -359,7 +405,6 @@
         const hmInput = document.getElementById('hm');
         const pieces = document.getElementById('pieces').value;
         
-        // Reset Hallmark to standard just in case they are switching OFF of Bronze
         hmInput.value = (pieces === "1") ? 100 : 150;
 
         if (type === "gold") {
@@ -367,23 +412,21 @@
         } else if (type === "sankha") {
             otherInput.value = 450; 
         } else if (type === "sankha_ring") {
-            // New Sankha Ring Logic
             mcInput.value = 1999;
             otherInput.value = 220;
         } else if (type === "bronze") {
-            // New Bronze Logic
             mcInput.value = 1499;
             otherInput.value = 0;
-            hmInput.value = 0; // HM strictly 0
+            hmInput.value = 0; 
         } else if (type === "others") {
             otherInput.value = 450;
         }
-        handleInput();
+        syncFromAmount(); // Updates % and calls handleInput
     }
 
     // 4. Handle Saves & Trigger Calculation
     function handleInput() {
-        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'otherCharges'];
+        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'mcPercent', 'otherCharges'];
         inputs.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
 
         const selects = ['ornamentType', 'pieces', 'carat'];
@@ -401,21 +444,12 @@
 
     // 5. Core Calculation Logic
     function calculate() {
-        const carat = document.getElementById('carat').value;
         const weight = parseFloat(document.getElementById('weight').value) || 0;
         const mc = parseFloat(document.getElementById('mc').value) || 0;
         const hm = parseFloat(document.getElementById('hm').value) || 0;
         const otherCharge = parseFloat(document.getElementById('otherCharges').value) || 0;
+        const rate1g = getActiveRate1g();
 
-        let rate10g = 0;
-        if (carat === "22K916") {
-            rate10g = parseFloat(document.getElementById('rate22k').value) || 0;
-        } else {
-            rate10g = parseFloat(document.getElementById('rate18k').value) || 0;
-        }
-        const rate1g = rate10g / 10;
-
-        // Variables for the breakdown
         let goldValue = 0;
         let totalMakingCharge = 0;
         let valueBeforeGST = 0;
