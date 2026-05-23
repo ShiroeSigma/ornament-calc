@@ -26,12 +26,39 @@
             padding: 10px;
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh;
         }
 
-        /* Desktop Left/Right Layout */
+        /* Top Navigation Button */
+        .nav-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end; /* Aligns button to the right */
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--primary); /* Gold colored text */
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            border: 1px solid var(--primary);
+        }
+        .nav-link:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
         .main-wrapper {
             display: grid;
             grid-template-columns: 1fr; 
@@ -43,11 +70,10 @@
 
         @media (min-width: 768px) {
             .main-wrapper {
-                grid-template-columns: 58% 40%; 
+                grid-template-columns: 50% 48%; 
             }
         }
 
-        /* Compact Glassmorphism Box */
         .box {
             background-color: rgba(255, 255, 255, 0.92);
             padding: 15px 20px;
@@ -81,7 +107,6 @@
             margin-bottom: 15px;
         }
 
-        /* Inputs tight spacing */
         .input-group {
             margin-bottom: 10px;
             background: #ffffff;
@@ -95,22 +120,22 @@
             margin-bottom: 5px;
             font-weight: 600;
             color: #343a40;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
 
-        input[type="number"], select {
+        input[type="number"], select, input[type="text"] {
             width: 100%;
-            padding: 8px;
+            padding: 6px 8px;
             border: 1px solid var(--border);
             border-radius: 5px;
             box-sizing: border-box;
-            font-size: 15px; 
+            font-size: 14px; 
             background-color: #fff;
             transition: border-color 0.2s;
             font-family: 'Inter', sans-serif;
         }
 
-        input[type="number"]:focus, select:focus {
+        input[type="number"]:focus, select:focus, input[type="text"]:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
@@ -121,8 +146,7 @@
             color: #495057;
             font-weight: bold;
         }
-        
-        /* RESULTS SECTION STYLING */
+
         .results-section {
             background: rgba(232, 245, 233, 0.7);
             border: 1px solid #c8e6c9;
@@ -133,29 +157,57 @@
         .result-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 1em;
+            margin-bottom: 6px;
+            font-size: 0.95em;
             font-weight: 500;
         }
         .breakdown-row {
             font-size: 0.9em;
             color: #495057;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .subtotal-row {
             border-top: 1px solid #a5d6a7;
-            padding-top: 10px;
-            margin-top: 10px;
+            padding-top: 8px;
+            margin-top: 8px;
             font-weight: 700;
             color: #212529;
         }
         .result-row.total {
-            font-size: 1.3em;
+            font-size: 1.25em;
             font-weight: 800;
             color: var(--success-text);
             border-top: 2px dashed #a5d6a7;
-            padding-top: 12px;
+            padding-top: 10px;
             margin-top: 8px;
+        }
+
+        /* Negotiation Tool Styling */
+        .nego-tool {
+            border-top: 2px dashed #a5d6a7;
+            margin-top: 15px;
+            padding-top: 12px;
+        }
+        .nego-title {
+            color: var(--success-text);
+            font-size: 1.05em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            margin-top: 0;
+            text-align: center;
+        }
+        .nego-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .nego-input {
+            background: #fff;
+            border: 2px solid var(--success-text) !important;
+        }
+        .discount-text {
+            color: var(--danger) !important;
+            background-color: #ffe8e8 !important;
         }
 
         .reset-btn {
@@ -165,7 +217,7 @@
             color: var(--danger);
             border: 2px solid var(--danger);
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 15px;
@@ -180,6 +232,10 @@
 </head>
 <body>
 
+<div class="nav-wrapper">
+    <a href="silver.html" class="nav-link">Switch to Silver Calculator →</a>
+</div>
+
 <div class="main-wrapper">
     
     <div class="box inputs-column">
@@ -187,13 +243,16 @@
         <div id="datetime" class="datetime">Loading time...</div>
 
         <div class="input-group">
-            <label>Today's gold rate 22K916 (per 10g)</label>
-            <input type="number" id="rate22k" placeholder="Enter rate..." oninput="rateChanged()">
-        </div>
-        
-        <div class="input-group">
-            <label>Today's gold rate 18K750 (per 10g)</label>
-            <input type="number" id="rate18k" placeholder="Enter rate..." oninput="rateChanged()">
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>22K916 Rate (per 10g)</label>
+                    <input type="number" id="rate22k" placeholder="Enter rate..." oninput="rateChanged()">
+                </div>
+                <div style="flex: 1;">
+                    <label>18K750 Rate (per 10g)</label>
+                    <input type="number" id="rate18k" placeholder="Enter rate..." oninput="rateChanged()">
+                </div>
+            </div>
         </div>
 
         <div class="input-group">
@@ -242,13 +301,16 @@
         </div>
 
         <div class="input-group">
-            <label>Hallmark Charges</label>
-            <input type="number" id="hm" class="readonly-text" readonly value="150">
-        </div>
-
-        <div class="input-group">
-            <label>Other Charges</label>
-            <input type="number" id="otherCharges" value="0" oninput="handleInput()">
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>Hallmark Charges</label>
+                    <input type="number" id="hm" class="readonly-text" readonly value="150">
+                </div>
+                <div style="flex: 1;">
+                    <label>Other Charges</label>
+                    <input type="number" id="otherCharges" value="0" oninput="handleInput()">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -287,6 +349,26 @@
                 <span>Ornament Value:</span>
                 <span id="outTotal">₹ 0.00</span>
             </div>
+
+            <div class="nego-tool">
+                <h3 class="nego-title">Negotiation Dashboard</h3>
+                
+                <div class="input-group" style="margin-bottom: 10px;">
+                    <label>Customer Wants to Pay (₹)</label>
+                    <input type="number" id="customerTotal" class="nego-input" placeholder="e.g. 15000" oninput="calculate()">
+                </div>
+
+                <div class="nego-grid">
+                    <div>
+                        <label>New Effective MC (₹)</label>
+                        <input type="text" id="effMcAmount" class="readonly-text discount-text" readonly value="₹ 0.00">
+                    </div>
+                    <div>
+                        <label>New Effective MC (%)</label>
+                        <input type="text" id="effMcPercent" class="readonly-text discount-text" readonly value="0.00%">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <button class="reset-btn" onclick="clearAllData()">Clear All Data</button>
@@ -320,10 +402,10 @@
         });
 
         handlePiecesChange(false); 
-        syncFromAmount(); // Ensure percentage matches the loaded amount
+        syncFromAmount(); 
 
-        // Enter Key Tab Functionality (Includes new percentage box)
-        const focusableElements = document.querySelectorAll('.inputs-column input:not([readonly]), .inputs-column select');
+        // Enter Key Tab Functionality 
+        const focusableElements = document.querySelectorAll('.inputs-column input:not([readonly]), .inputs-column select, #customerTotal');
         focusableElements.forEach((el, index) => {
             el.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
@@ -346,7 +428,6 @@
         return rate10g / 10;
     }
 
-    // Called when the ₹ Amount box is edited
     function syncFromAmount() {
         const rate1g = getActiveRate1g();
         const mcAmt = parseFloat(document.getElementById('mc').value) || 0;
@@ -357,10 +438,9 @@
         } else {
             document.getElementById('mcPercent').value = 0;
         }
-        handleInput(); // Save and calculate
+        handleInput(); 
     }
 
-    // Called when the % box is edited
     function syncFromPercent() {
         const rate1g = getActiveRate1g();
         const mcPct = parseFloat(document.getElementById('mcPercent').value) || 0;
@@ -369,14 +449,12 @@
             const amount = (mcPct / 100) * rate1g;
             document.getElementById('mc').value = amount.toFixed(2);
         }
-        handleInput(); // Save and calculate
+        handleInput(); 
     }
 
-    // Called when Gold Rates are changed (keeps the ₹ Amount fixed and auto-adjusts the %)
     function rateChanged() {
         syncFromAmount();
     }
-    // ------------------------------------------------
 
     // 3. Dynamic Field Handlers
     function handlePiecesChange(triggerSave = true) {
@@ -395,7 +473,7 @@
     function handleCaratChange() {
         const carat = document.getElementById('carat').value;
         document.getElementById('mc').value = (carat === "22K916") ? 1999 : 1499;
-        syncFromAmount(); // Updates % and calls handleInput
+        syncFromAmount(); 
     }
 
     function handleOrnamentChange() {
@@ -421,7 +499,7 @@
         } else if (type === "others") {
             otherInput.value = 450;
         }
-        syncFromAmount(); // Updates % and calls handleInput
+        syncFromAmount(); 
     }
 
     // 4. Handle Saves & Trigger Calculation
@@ -439,6 +517,47 @@
         if(confirm("Are you sure you want to clear all rates and reset the calculator?")) {
             localStorage.clear();
             location.reload();
+        }
+    }
+
+    // --- REVERSE NEGOTIATION CALCULATOR ---
+    function calculateReverseMC(originalTotal) {
+        const custTotalStr = document.getElementById('customerTotal').value;
+        const custTotal = parseFloat(custTotalStr);
+        
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const hm = parseFloat(document.getElementById('hm').value) || 0;
+        const otherCharge = parseFloat(document.getElementById('otherCharges').value) || 0;
+        const rate1g = getActiveRate1g();
+
+        // Calculate only if all necessary numbers exist
+        if (custTotalStr && custTotal > 0 && weight > 0 && rate1g > 0 && originalTotal > 0) {
+            
+            // 1. Strip the GST back out
+            const targetBaseValue = custTotal / 1.03; 
+            const goldValue = rate1g * weight;
+            
+            // 2. Isolate the Total Making Charge left over
+            const targetTotalMC = targetBaseValue - goldValue - hm - otherCharge;
+
+            // 3. Convert that back to the format you typed it in (Per Gram or Flat)
+            let effectiveMcInput = 0;
+            if (weight > 1) {
+                effectiveMcInput = targetTotalMC / weight;
+            } else {
+                effectiveMcInput = targetTotalMC;
+            }
+
+            // 4. Calculate the new effective percentage
+            const effectivePercent = (effectiveMcInput / rate1g) * 100;
+
+            // Display results (showing exactly what the NEW MC is)
+            document.getElementById('effMcAmount').value = "₹ " + effectiveMcInput.toFixed(2);
+            document.getElementById('effMcPercent').value = effectivePercent.toFixed(2) + "%";
+            
+        } else {
+            document.getElementById('effMcAmount').value = "₹ 0.00";
+            document.getElementById('effMcPercent').value = "0.00%";
         }
     }
 
@@ -483,6 +602,9 @@
         document.getElementById('outBaseValue').innerText = formatMoney(valueBeforeGST);
         document.getElementById('outGst').innerText = formatMoney(gst);
         document.getElementById('outTotal').innerText = formatMoney(total);
+
+        // ALWAYS SYNC NEGOTIATION DASHBOARD
+        calculateReverseMC(total); 
     }
 </script>
 
