@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silver Value Calculator</title>
+    <title>Ornament Value Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Silver Theme Colors */
-            --primary: #7d8a96; 
-            --primary-light: #e2e8f0;
+            --primary: #d4af37;
             --bg: #f8f9fa;
             --text: #212529;
             --border: #dee2e6;
             --danger: #dc3545;
-            --success-text: #2b6cb0; 
+            --success-text: #2e7d32;
         }
         
         body {
             font-family: 'Inter', sans-serif;
-            background-image: url('silverbg.jpg'); /* Looks for your uploaded image */
-            background-color: #cbd5e1; /* Acts as a fallback color while image loads */
+            background-image: url('bgpic.jpg'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -39,23 +36,27 @@
             width: 100%;
             max-width: 900px;
             margin-top: 10px;
+            display: flex;
+            justify-content: flex-end; /* Aligns button to the right */
         }
         .nav-link {
             display: inline-block;
             padding: 8px 16px;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: var(--success-text);
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--primary); /* Gold colored text */
             text-decoration: none;
             border-radius: 8px;
             font-weight: 700;
             font-size: 0.9em;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: all 0.2s;
+            border: 1px solid var(--primary);
         }
         .nav-link:hover {
-            background-color: #ffffff;
+            background-color: var(--primary);
+            color: white;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         .main-wrapper {
@@ -74,7 +75,7 @@
         }
 
         .box {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.92);
             padding: 15px 20px;
             border-radius: 10px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
@@ -107,7 +108,7 @@
         }
 
         .input-group {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             background: #ffffff;
             padding: 8px 12px;
             border: 1px solid var(--border);
@@ -124,7 +125,7 @@
 
         input[type="number"], select, input[type="text"] {
             width: 100%;
-            padding: 8px;
+            padding: 6px 8px;
             border: 1px solid var(--border);
             border-radius: 5px;
             box-sizing: border-box;
@@ -137,7 +138,7 @@
         input[type="number"]:focus, select:focus, input[type="text"]:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(125, 138, 150, 0.3);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
         }
 
         .readonly-text {
@@ -147,13 +148,12 @@
         }
 
         .results-section {
-            background: var(--primary-light);
-            border: 1px solid #cbd5e1;
+            background: rgba(232, 245, 233, 0.7);
+            border: 1px solid #c8e6c9;
             padding: 15px;
             border-radius: 8px;
             margin-top: 10px;
         }
-        
         .result-row {
             display: flex;
             justify-content: space-between;
@@ -161,20 +161,53 @@
             font-size: 0.95em;
             font-weight: 500;
         }
-        
         .breakdown-row {
             font-size: 0.9em;
             color: #495057;
             margin-bottom: 4px;
         }
-        
+        .subtotal-row {
+            border-top: 1px solid #a5d6a7;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-weight: 700;
+            color: #212529;
+        }
         .result-row.total {
             font-size: 1.25em;
             font-weight: 800;
             color: var(--success-text);
-            border-top: 2px dashed #94a3b8;
+            border-top: 2px dashed #a5d6a7;
             padding-top: 10px;
             margin-top: 8px;
+        }
+
+        /* Negotiation Tool Styling */
+        .nego-tool {
+            border-top: 2px dashed #a5d6a7;
+            margin-top: 15px;
+            padding-top: 12px;
+        }
+        .nego-title {
+            color: var(--success-text);
+            font-size: 1.05em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            margin-top: 0;
+            text-align: center;
+        }
+        .nego-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .nego-input {
+            background: #fff;
+            border: 2px solid var(--success-text) !important;
+        }
+        .discount-text {
+            color: var(--danger) !important;
+            background-color: #ffe8e8 !important;
         }
 
         .reset-btn {
@@ -191,7 +224,6 @@
             transition: all 0.2s;
             font-family: 'Inter', sans-serif;
         }
-        
         .reset-btn:hover {
             background-color: var(--danger);
             color: white;
@@ -211,38 +243,78 @@
 <div class="main-wrapper">
     
     <div class="box inputs-column">
-        <h2>Silver Value Calculator</h2>
+        <h2>Ornament Value Calculator</h2>
         <div id="datetime" class="datetime">Loading time...</div>
-
-        <div class="input-group">
-            <label>Today's Silver Rate (per 1 Gram)</label>
-            <input type="number" id="rateSilver" placeholder="e.g. 95.50" step="0.01" oninput="handleInput()">
-        </div>
-
-        <div class="input-group">
-            <label>Making Charge Applied By:</label>
-            <select id="mcToggle" onchange="handleInput()">
-                <option value="weight" selected>Weight (Per Gram)</option>
-                <option value="pieces">Pieces (Per Piece)</option>
-            </select>
-        </div>
 
         <div class="input-group">
             <div style="display: flex; gap: 15px;">
                 <div style="flex: 1;">
-                    <label>Weight (Grams)</label>
-                    <input type="number" id="weight" step="0.001" placeholder="e.g. 15.500" oninput="handleInput()">
+                    <label>22K916 Rate (per 10g)</label>
+                    <input type="number" id="rate22k" placeholder="Enter rate..." oninput="rateChanged()">
                 </div>
                 <div style="flex: 1;">
-                    <label>Pieces</label>
-                    <input type="number" id="pieces" value="1" min="1" oninput="handleInput()">
+                    <label>18K750 Rate (per 10g)</label>
+                    <input type="number" id="rate18k" placeholder="Enter rate..." oninput="rateChanged()">
                 </div>
             </div>
         </div>
 
         <div class="input-group">
-            <label>Making Charge (₹)</label>
-            <input type="number" id="mc" value="200" oninput="handleInput()">
+            <label>Type of Ornament</label>
+            <select id="ornamentType" onchange="handleOrnamentChange()">
+                <option value="gold" selected>Only gold</option>
+                <option value="sankha">Sankha</option>
+                <option value="sankha_ring">Sankha Ring</option>
+                <option value="bronze">Bronze</option>
+                <option value="others">Others</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Pieces</label>
+            <select id="pieces" onchange="handlePiecesChange()">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Carat</label>
+            <select id="carat" onchange="handleCaratChange()">
+                <option value="22K916" selected>22K916</option>
+                <option value="18K750">18K750</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Weight (Grams)</label>
+            <input type="number" id="weight" step="0.001" placeholder="e.g. 5.370" oninput="handleInput()">
+        </div>
+
+        <div class="input-group">
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>MC (₹ Amount)</label>
+                    <input type="number" id="mc" value="1999" oninput="syncFromAmount()">
+                </div>
+                <div style="flex: 1;">
+                    <label>MC (%)</label>
+                    <input type="number" id="mcPercent" value="0" step="0.01" oninput="syncFromPercent()">
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>Hallmark Charges</label>
+                    <input type="number" id="hm" class="readonly-text" readonly value="150">
+                </div>
+                <div style="flex: 1;">
+                    <label>Other Charges</label>
+                    <input type="number" id="otherCharges" value="0" oninput="handleInput()">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -251,17 +323,55 @@
         
         <div class="results-section">
             <div class="result-row breakdown-row">
-                <span>Silver Value:</span>
-                <span id="outSilverValue">₹ 0.00</span>
+                <span>Gold Value:</span>
+                <span id="outGoldValue">₹ 0.00</span>
             </div>
             <div class="result-row breakdown-row">
                 <span>Making Charge:</span>
                 <span id="outMakingCharge">₹ 0.00</span>
             </div>
+            <div class="result-row breakdown-row">
+                <span>Hallmark Charge:</span>
+                <span id="outHallmarkCharge">₹ 0.00</span>
+            </div>
+            <div class="result-row breakdown-row">
+                <span>Other Charge:</span>
+                <span id="outOtherCharge">₹ 0.00</span>
+            </div>
+            
+            <div class="result-row subtotal-row">
+                <span>Value Before GST:</span>
+                <span id="outBaseValue">₹ 0.00</span>
+            </div>
+            
+            <div class="result-row">
+                <span>GST (3%):</span>
+                <span id="outGst">₹ 0.00</span>
+            </div>
             
             <div class="result-row total">
-                <span>Final Silver Value:</span>
+                <span>Ornament Value:</span>
                 <span id="outTotal">₹ 0.00</span>
+            </div>
+
+            <div class="nego-tool">
+                <h3 class="nego-title">Negotiation Dashboard</h3>
+                
+                <div class="input-group" style="margin-bottom: 10px;">
+                    <label>Customer Wants to Pay (₹)</label>
+                    <input type="number" id="customerTotal" class="nego-input" placeholder="e.g. 15000" oninput="calculate()">
+                </div>
+
+                <div class="nego-grid">
+                    <div>
+                        <label>New Effective MC (₹)</label>
+                        <input type="text" id="effMcAmount" class="readonly-text discount-text" readonly value="₹ 0.00">
+                    </div>
+                    <div>
+                        <label>New Effective MC (%)</label>
+                        <input type="text" id="effMcPercent" class="readonly-text discount-text" readonly value="0.00%">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -283,22 +393,23 @@
 
     // 2. Load Saved Data
     window.onload = function() {
-        const inputs = ['rateSilver', 'weight', 'pieces', 'mc'];
+        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'mcPercent', 'otherCharges'];
         inputs.forEach(id => {
-            const saved = localStorage.getItem('silver_' + id);
+            const saved = localStorage.getItem(id);
             if(saved !== null) document.getElementById(id).value = saved;
         });
 
-        const selects = ['mcToggle'];
+        const selects = ['ornamentType', 'pieces', 'carat'];
         selects.forEach(id => {
-            const saved = localStorage.getItem('silver_' + id);
+            const saved = localStorage.getItem(id);
             if(saved !== null) document.getElementById(id).value = saved;
         });
 
-        calculate();
+        handlePiecesChange(false); 
+        syncFromAmount(); 
 
         // Enter Key Tab Functionality 
-        const focusableElements = document.querySelectorAll('.inputs-column input:not([readonly]), .inputs-column select');
+        const focusableElements = document.querySelectorAll('.inputs-column input:not([readonly]), .inputs-column select, #customerTotal');
         focusableElements.forEach((el, index) => {
             el.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
@@ -314,60 +425,192 @@
         });
     };
 
-    // 3. Handle Saves & Trigger Calculation
-    function handleInput() {
-        const inputs = ['rateSilver', 'weight', 'pieces', 'mc'];
-        inputs.forEach(id => localStorage.setItem('silver_' + id, document.getElementById(id).value));
+    // --- TWO-WAY BINDING LOGIC FOR MAKING CHARGE ---
+    function getActiveRate1g() {
+        const carat = document.getElementById('carat').value;
+        let rate10g = parseFloat(document.getElementById(carat === '22K916' ? 'rate22k' : 'rate18k').value) || 0;
+        return rate10g / 10;
+    }
 
-        const selects = ['mcToggle'];
-        selects.forEach(id => localStorage.setItem('silver_' + id, document.getElementById(id).value));
+    function syncFromAmount() {
+        const rate1g = getActiveRate1g();
+        const mcAmt = parseFloat(document.getElementById('mc').value) || 0;
+        
+        if (rate1g > 0) {
+            const percent = (mcAmt / rate1g) * 100;
+            document.getElementById('mcPercent').value = percent.toFixed(2);
+        } else {
+            document.getElementById('mcPercent').value = 0;
+        }
+        handleInput(); 
+    }
+
+    function syncFromPercent() {
+        const rate1g = getActiveRate1g();
+        const mcPct = parseFloat(document.getElementById('mcPercent').value) || 0;
+        
+        if (rate1g > 0) {
+            const amount = (mcPct / 100) * rate1g;
+            document.getElementById('mc').value = amount.toFixed(2);
+        }
+        handleInput(); 
+    }
+
+    function rateChanged() {
+        syncFromAmount();
+    }
+
+    // 3. Dynamic Field Handlers
+    function handlePiecesChange(triggerSave = true) {
+        const pieces = document.getElementById('pieces').value;
+        const type = document.getElementById('ornamentType').value;
+        
+        if (type === "bronze") {
+            document.getElementById('hm').value = 0;
+        } else {
+            document.getElementById('hm').value = (pieces === "1") ? 100 : 150;
+        }
+
+        if(triggerSave) handleInput();
+    }
+
+    function handleCaratChange() {
+        const carat = document.getElementById('carat').value;
+        document.getElementById('mc').value = (carat === "22K916") ? 1999 : 1499;
+        syncFromAmount(); 
+    }
+
+    function handleOrnamentChange() {
+        const type = document.getElementById('ornamentType').value;
+        const otherInput = document.getElementById('otherCharges');
+        const mcInput = document.getElementById('mc');
+        const hmInput = document.getElementById('hm');
+        const pieces = document.getElementById('pieces').value;
+        
+        hmInput.value = (pieces === "1") ? 100 : 150;
+
+        if (type === "gold") {
+            otherInput.value = 0;
+        } else if (type === "sankha") {
+            otherInput.value = 450; 
+        } else if (type === "sankha_ring") {
+            mcInput.value = 1999;
+            otherInput.value = 220;
+        } else if (type === "bronze") {
+            mcInput.value = 1499;
+            otherInput.value = 0;
+            hmInput.value = 0; 
+        } else if (type === "others") {
+            otherInput.value = 450;
+        }
+        syncFromAmount(); 
+    }
+
+    // 4. Handle Saves & Trigger Calculation
+    function handleInput() {
+        const inputs = ['rate22k', 'rate18k', 'weight', 'mc', 'mcPercent', 'otherCharges'];
+        inputs.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
+
+        const selects = ['ornamentType', 'pieces', 'carat'];
+        selects.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
 
         calculate();
     }
 
     function clearAllData() {
         if(confirm("Are you sure you want to clear all rates and reset the calculator?")) {
-            // Only clear silver-specific local storage items
-            ['rateSilver', 'weight', 'pieces', 'mc', 'mcToggle'].forEach(id => {
-                localStorage.removeItem('silver_' + id);
-            });
+            localStorage.clear();
             location.reload();
         }
     }
 
-    // 4. Core Calculation Logic
-    function calculate() {
-        const rate1g = parseFloat(document.getElementById('rateSilver').value) || 0;
+    // --- REVERSE NEGOTIATION CALCULATOR ---
+    function calculateReverseMC(originalTotal) {
+        const custTotalStr = document.getElementById('customerTotal').value;
+        const custTotal = parseFloat(custTotalStr);
+        
         const weight = parseFloat(document.getElementById('weight').value) || 0;
-        const pieces = parseFloat(document.getElementById('pieces').value) || 0;
-        const mc = parseFloat(document.getElementById('mc').value) || 0;
-        const mcToggle = document.getElementById('mcToggle').value;
+        const hm = parseFloat(document.getElementById('hm').value) || 0;
+        const otherCharge = parseFloat(document.getElementById('otherCharges').value) || 0;
+        const rate1g = getActiveRate1g();
 
-        let silverValue = 0;
+        // Calculate only if all necessary numbers exist
+        if (custTotalStr && custTotal > 0 && weight > 0 && rate1g > 0 && originalTotal > 0) {
+            
+            // 1. Strip the GST back out
+            const targetBaseValue = custTotal / 1.03; 
+            const goldValue = rate1g * weight;
+            
+            // 2. Isolate the Total Making Charge left over
+            const targetTotalMC = targetBaseValue - goldValue - hm - otherCharge;
+
+            // 3. Convert that back to the format you typed it in (Per Gram or Flat)
+            let effectiveMcInput = 0;
+            if (weight > 1) {
+                effectiveMcInput = targetTotalMC / weight;
+            } else {
+                effectiveMcInput = targetTotalMC;
+            }
+
+            // 4. Calculate the new effective percentage
+            const effectivePercent = (effectiveMcInput / rate1g) * 100;
+
+            // Display results (showing exactly what the NEW MC is)
+            document.getElementById('effMcAmount').value = "₹ " + effectiveMcInput.toFixed(2);
+            document.getElementById('effMcPercent').value = effectivePercent.toFixed(2) + "%";
+            
+        } else {
+            document.getElementById('effMcAmount').value = "₹ 0.00";
+            document.getElementById('effMcPercent').value = "0.00%";
+        }
+    }
+
+    // 5. Core Calculation Logic
+    function calculate() {
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const mc = parseFloat(document.getElementById('mc').value) || 0;
+        const hm = parseFloat(document.getElementById('hm').value) || 0;
+        const otherCharge = parseFloat(document.getElementById('otherCharges').value) || 0;
+        const rate1g = getActiveRate1g();
+
+        let goldValue = 0;
         let totalMakingCharge = 0;
+        let valueBeforeGST = 0;
 
         if (weight > 0) {
-            silverValue = rate1g * weight;
-
-            if (mcToggle === "pieces") {
-                // Formula 1: By Pieces
-                totalMakingCharge = mc * pieces;
-            } else {
-                // Formula 2: By Weight
+            if (weight > 1) {
+                // Formula 1: Weight Greater than 1gm
+                goldValue = rate1g * weight;
                 totalMakingCharge = mc * weight; 
+                valueBeforeGST = goldValue + totalMakingCharge + hm + otherCharge;
+            } else {
+                // Formula 2: Weight Less than or equal to 1gm
+                goldValue = rate1g * weight;
+                totalMakingCharge = mc; // Applied as a flat amount
+                valueBeforeGST = goldValue + totalMakingCharge + hm + otherCharge;
             }
         }
 
-        // Final Total (No GST)
-        const total = silverValue + totalMakingCharge;
+        // GST & Total
+        const gst = valueBeforeGST > 0 ? (valueBeforeGST * 0.03) : 0;
+        const total = valueBeforeGST + gst;
 
         // Format and Display
         const formatMoney = (amt) => "₹ " + amt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         
-        document.getElementById('outSilverValue').innerText = formatMoney(silverValue);
+        document.getElementById('outGoldValue').innerText = formatMoney(goldValue);
         document.getElementById('outMakingCharge').innerText = formatMoney(totalMakingCharge);
+        document.getElementById('outHallmarkCharge').innerText = formatMoney(weight > 0 ? hm : 0);
+        document.getElementById('outOtherCharge').innerText = formatMoney(weight > 0 ? otherCharge : 0);
+        
+        document.getElementById('outBaseValue').innerText = formatMoney(valueBeforeGST);
+        document.getElementById('outGst').innerText = formatMoney(gst);
         document.getElementById('outTotal').innerText = formatMoney(total);
+
+        // ALWAYS SYNC NEGOTIATION DASHBOARD
+        calculateReverseMC(total); 
     }
 </script>
+
 </body>
 </html>
