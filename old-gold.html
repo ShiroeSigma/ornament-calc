@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Gold Exchange</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Vintage/Old Gold Theme Colors */
+            --primary: #b8860b; /* Dark Goldenrod */
+            --primary-light: #fef9e7;
+            --bg: #f8f9fa;
+            --text: #212529;
+            --border: #dee2e6;
+            --danger: #dc3545;
+            --success-text: #8b6508; 
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('oldgoldbg.jpg'); 
+            background-color: #e6dfd5; 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            padding: 10px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Unified Navigation Bar */
+        .nav-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #495057;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .nav-link:hover {
+            background-color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .nav-link.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: #ffffff;
+        }
+
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 15px;
+            max-width: 900px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .main-wrapper {
+                grid-template-columns: 50% 48%; 
+            }
+        }
+
+        .box {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .sticky-results {
+            position: sticky;
+            top: 10px;
+            height: fit-content;
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .datetime {
+            text-align: center;
+            font-size: 0.85em;
+            color: #495057;
+            font-weight: 500;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+            background: #ffffff;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #343a40;
+            font-size: 0.85em;
+        }
+
+        input[type="number"], select, input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px; 
+            background-color: #fff;
+            transition: border-color 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="number"]:focus, select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.3);
+        }
+
+        .readonly-text {
+            background-color: #e9ecef !important;
+            color: #495057;
+            font-weight: bold;
+        }
+
+        .results-section {
+            background: var(--primary-light);
+            border: 1px solid #f1e5bc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        
+        .breakdown-row {
+            font-size: 0.9em;
+            color: #495057;
+            margin-bottom: 4px;
+        }
+
+        .subtotal-row {
+            border-top: 1px solid #d3c490;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-weight: 700;
+            color: #212529;
+        }
+        
+        .result-row.total {
+            font-size: 1.35em;
+            font-weight: 800;
+            color: var(--success-text);
+            border-top: 2px dashed #d3c490;
+            padding-top: 10px;
+            margin-top: 8px;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: transparent;
+            color: var(--danger);
+            border: 2px solid var(--danger);
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .reset-btn:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="nav-wrapper" style="width: 100%; max-width: 900px; margin-top: 10px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+    <a href="index.html" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.9); color: #495057; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;">Gold Calculator</a>
+    
+    <a href="silver.html" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.9); color: #495057; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;">Silver Calculator</a>
+    
+    <a href="old-gold.html" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.9); color: #495057; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;">Old Gold Exchange</a>
+</div>
+
+<div class="main-wrapper">
+    
+    <div class="box inputs-column">
+        <h2>Old Gold Exchange</h2>
+        <div id="datetime" class="datetime">Loading time...</div>
+
+        <div class="input-group">
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>24K Exchange Rate (per 10g)</label>
+                    <input type="number" id="rate24k" placeholder="Enter rate..." oninput="handleInput()">
+                </div>
+                <div style="flex: 1;">
+                    <label>22K916 Exchange Rate (per 10g)</label>
+                    <input type="number" id="rate22k" placeholder="Enter rate..." oninput="handleInput()">
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Ornament Type</label>
+            <select id="ornamentType" onchange="handleTypeChange()">
+                <option value="non_hallmark" selected>Non-Hallmark</option>
+                <option value="18k750">18K750</option>
+                <option value="22k916">22K916</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Gold Purity (%)</label>
+            <input type="number" id="purity" step="0.01" placeholder="e.g. 85.50" oninput="handleInput()">
+        </div>
+
+        <div class="input-group">
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>Gross Weight (g)</label>
+                    <input type="number" id="weight" step="0.001" placeholder="e.g. 10.000" oninput="handleInput()">
+                </div>
+                <div style="flex: 1;">
+                    <label>Dust Weight (g)</label>
+                    <input type="number" id="dust" step="0.001" placeholder="e.g. 0.200" oninput="handleInput()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box sticky-results">
+        <h2 style="color: var(--success-text);">Exchange Value</h2>
+        
+        <div class="results-section">
+            <div class="result-row breakdown-row">
+                <span>Gross Weight:</span>
+                <span id="outGrossWeight">0.000 g</span>
+            </div>
+            <div class="result-row breakdown-row" style="color: var(--danger);">
+                <span>Less Dust:</span>
+                <span id="outDustWeight">- 0.000 g</span>
+            </div>
+            <div class="result-row subtotal-row">
+                <span>Net Gold Weight:</span>
+                <span id="outNetWeight">0.000 g</span>
+            </div>
+            
+            <div class="result-row breakdown-row" style="margin-top: 15px;">
+                <span>Effective Rate (per Gram):</span>
+                <span id="outEffectiveRate">₹ 0.00</span>
+            </div>
+            
+            <div class="result-row total">
+                <span>Final Exchange Value:</span>
+                <span id="outTotalValue">₹ 0.00</span>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="clearAllData()">Clear All Data</button>
+    </div>
+
+</div>
+
+<script>
+    // 1. Live Clock
+    function updateDateTime() {
+        const now = new Date();
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('datetime').innerText = now.toLocaleDateString(undefined, dateOptions) + ' | ' + now.toLocaleTimeString(undefined, timeOptions);
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // 2. Load Saved Data
+    window.onload = function() {
+        const inputs = ['rate24k', 'rate22k', 'weight', 'dust', 'purity'];
+        inputs.forEach(id => {
+            const saved = localStorage.getItem('oldgold_' + id);
+            if(saved !== null) document.getElementById(id).value = saved;
+        });
+
+        const selects = ['ornamentType'];
+        selects.forEach(id => {
+            const saved = localStorage.getItem('oldgold_' + id);
+            if(saved !== null) document.getElementById(id).value = saved;
+        });
+
+        handleTypeChange(false); // Initializes the purity box correctly based on the loaded type
+        calculate();
+
+        // Enter Key Tab Functionality 
+        const focusableElements = document.querySelectorAll('.inputs-column input:not([readonly]), .inputs-column select');
+        focusableElements.forEach((el, index) => {
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const nextElement = focusableElements[index + 1];
+                    if (nextElement) {
+                        nextElement.focus();
+                    } else {
+                        el.blur(); 
+                    }
+                }
+            });
+        });
+    };
+
+    // 3. Dynamic Field Handlers
+    function handleTypeChange(triggerSave = true) {
+        const type = document.getElementById('ornamentType').value;
+        const purityInput = document.getElementById('purity');
+
+        if (type === '22k916') {
+            // Purity is strictly derived from 22k exchange rate, no input needed
+            purityInput.value = 91.6;
+            purityInput.setAttribute('readonly', 'true');
+            purityInput.classList.add('readonly-text');
+        } else if (type === '18k750') {
+            // Default to 75% but allow editing
+            if (!purityInput.value || purityInput.classList.contains('readonly-text')) {
+                purityInput.value = 75;
+            }
+            purityInput.removeAttribute('readonly');
+            purityInput.classList.remove('readonly-text');
+        } else {
+            // Non-Hallmark, allow full editing
+            purityInput.removeAttribute('readonly');
+            purityInput.classList.remove('readonly-text');
+        }
+
+        if (triggerSave) handleInput();
+    }
+
+    // 4. Handle Saves & Trigger Calculation
+    function handleInput() {
+        const inputs = ['rate24k', 'rate22k', 'weight', 'dust', 'purity'];
+        inputs.forEach(id => localStorage.setItem('oldgold_' + id, document.getElementById(id).value));
+
+        const selects = ['ornamentType'];
+        selects.forEach(id => localStorage.setItem('oldgold_' + id, document.getElementById(id).value));
+
+        calculate();
+    }
+
+    function clearAllData() {
+        if(confirm("Are you sure you want to clear the exchange rates and reset?")) {
+            ['rate24k', 'rate22k', 'weight', 'dust', 'purity', 'ornamentType'].forEach(id => {
+                localStorage.removeItem('oldgold_' + id);
+            });
+            location.reload();
+        }
+    }
+
+    // 5. Core Calculation Logic
+    function calculate() {
+        const rate24k = parseFloat(document.getElementById('rate24k').value) || 0;
+        const rate22k = parseFloat(document.getElementById('rate22k').value) || 0;
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const dust = parseFloat(document.getElementById('dust').value) || 0;
+        const purity = parseFloat(document.getElementById('purity').value) || 0;
+        const type = document.getElementById('ornamentType').value;
+
+        // Prevent negative weight
+        const netWeight = Math.max(0, weight - dust);
+        let finalValue = 0;
+        let effectiveRatePerGram = 0;
+
+        if (netWeight > 0) {
+            if (type === 'non_hallmark') {
+                // Formula 1: (Weight - Dust) * Purity% * 24K Exchange Rate
+                effectiveRatePerGram = (purity / 100) * (rate24k / 10);
+                finalValue = netWeight * effectiveRatePerGram;
+            } 
+            else if (type === '18k750') {
+                // Formula 2: (Weight - Dust) * Purity% * 24K Exchange Rate
+                effectiveRatePerGram = (purity / 100) * (rate24k / 10);
+                finalValue = netWeight * effectiveRatePerGram;
+            } 
+            else if (type === '22k916') {
+                // Formula 3: (Weight - Dust) * 22K916 Exchange Rate
+                effectiveRatePerGram = (rate22k / 10);
+                finalValue = netWeight * effectiveRatePerGram;
+            }
+        }
+
+        // Format and Display
+        const formatMoney = (amt) => "₹ " + amt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const formatWeight = (amt) => amt.toFixed(3) + " g";
+        
+        document.getElementById('outGrossWeight').innerText = formatWeight(weight);
+        document.getElementById('outDustWeight').innerText = "- " + formatWeight(dust);
+        document.getElementById('outNetWeight').innerText = formatWeight(netWeight);
+        
+        document.getElementById('outEffectiveRate').innerText = formatMoney(effectiveRatePerGram);
+        document.getElementById('outTotalValue').innerText = formatMoney(finalValue);
+    }
+</script>
+
+</body>
+</html>
