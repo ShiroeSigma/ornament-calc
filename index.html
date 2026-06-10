@@ -37,13 +37,13 @@
             max-width: 900px;
             margin-top: 10px;
             display: flex;
-            justify-content: flex-end; /* Aligns button to the right */
+            justify-content: flex-end;
         }
         .nav-link {
             display: inline-block;
             padding: 8px 16px;
             background-color: rgba(255, 255, 255, 0.95);
-            color: var(--primary); /* Gold colored text */
+            color: var(--primary);
             text-decoration: none;
             border-radius: 8px;
             font-weight: 700;
@@ -213,47 +213,41 @@
         .reset-btn {
             width: 100%;
             padding: 10px;
-            background-color: transparent;
-            color: var(--danger);
-            border: 2px solid var(--danger);
+            background-color: #f1f3f5;
+            color: #495057;
+            border: 1px solid #ced4da;
             border-radius: 6px;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 10px;
             transition: all 0.2s;
             font-family: 'Inter', sans-serif;
         }
+        
         .reset-btn:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary);
+        }
+
+        .clear-btn {
+            background-color: transparent;
+            color: var(--danger);
+            border: 2px solid var(--danger);
+        }
+
+        .clear-btn:hover {
             background-color: var(--danger);
             color: white;
+            border-color: var(--danger);
         }
-        .reset-btn {
-    width: 100%;
-    padding: 10px;
-    background-color: #f1f3f5;
-    color: #495057;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: all 0.2s;
-}
-.reset-btn:hover {
-    background-color: #e9ecef;
-    border-color: var(--primary);
-}
     </style>
 </head>
 <body>
 
 <div class="nav-wrapper" style="width: 100%; max-width: 900px; margin-top: 10px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
     <a href="index.html" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.9); color: #495057; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;">Gold Calculator</a>
-    
     <a href="silver.html" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.9); color: #495057; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;">Silver Calculator</a>
-    
     <a href="old-gold.html" class="nav-link" style="display: inline-block; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.9); color: #495057; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;">Old Gold Exchange</a>
 </div>
 
@@ -320,7 +314,8 @@
                 </div>
             </div>
         </div>
-        <button class="reset-btn" onclick="resetDefaults()">Reset to Defaults 🔄</button>
+        
+        <button class="reset-btn" style="background-color: #fff3bf; border-color: #fab005; color: #d9480f; margin-bottom: 10px;" onclick="resetCharges()">Reset Making Charges 🔄</button>
 
         <div class="input-group">
             <div style="display: flex; gap: 15px;">
@@ -393,7 +388,7 @@
             </div>
         </div>
 
-        <button class="reset-btn" onclick="clearAllData()">Clear All Data</button>
+        <button class="reset-btn clear-btn" onclick="clearAllData()">Clear All Data</button>
     </div>
 
 </div>
@@ -477,22 +472,17 @@
     function rateChanged() {
         syncFromAmount();
     }
-    function resetDefaults() {
-    if(confirm("Snap all values back to default settings?")) {
-        // Set your preferred defaults here
-        document.getElementById('mc').value = 1999;
-        document.getElementById('otherCharges').value = 0;
-        document.getElementById('ornamentType').value = 'gold';
-        document.getElementById('carat').value = '22K916';
-        
-        // Hallmark default based on your logic
-        document.getElementById('hm').value = 150; 
-        
-        // Sync everything and recalculate
-        syncFromAmount();
-        handlePiecesChange();
+
+    // --- NEW RESET CHARGES FUNCTION ---
+    function resetCharges() {
+        if(confirm("Reset Making Charge and Other Charges to default values?")) {
+            document.getElementById('mc').value = 1999;
+            document.getElementById('otherCharges').value = 0;
+            // Trigger calculation
+            syncFromAmount();
+        }
     }
-}
+
     // 3. Dynamic Field Handlers
     function handlePiecesChange(triggerSave = true) {
         const pieces = document.getElementById('pieces').value;
