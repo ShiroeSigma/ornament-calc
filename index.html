@@ -228,6 +228,23 @@
             background-color: var(--danger);
             color: white;
         }
+        .reset-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #f1f3f5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+}
+.reset-btn:hover {
+    background-color: #e9ecef;
+    border-color: var(--primary);
+}
     </style>
 </head>
 <body>
@@ -303,6 +320,7 @@
                 </div>
             </div>
         </div>
+        <button class="reset-btn" onclick="resetDefaults()">Reset to Defaults 🔄</button>
 
         <div class="input-group">
             <div style="display: flex; gap: 15px;">
@@ -459,7 +477,22 @@
     function rateChanged() {
         syncFromAmount();
     }
-
+    function resetDefaults() {
+    if(confirm("Snap all values back to default settings?")) {
+        // Set your preferred defaults here
+        document.getElementById('mc').value = 1999;
+        document.getElementById('otherCharges').value = 0;
+        document.getElementById('ornamentType').value = 'gold';
+        document.getElementById('carat').value = '22K916';
+        
+        // Hallmark default based on your logic
+        document.getElementById('hm').value = 150; 
+        
+        // Sync everything and recalculate
+        syncFromAmount();
+        handlePiecesChange();
+    }
+}
     // 3. Dynamic Field Handlers
     function handlePiecesChange(triggerSave = true) {
         const pieces = document.getElementById('pieces').value;
