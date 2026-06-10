@@ -198,12 +198,12 @@
         .reset-btn {
             width: 100%;
             padding: 10px;
-            background-color: transparent;
-            color: var(--danger);
-            border: 2px solid var(--danger);
+            background-color: #f1f3f5;
+            color: #495057;
+            border: 1px solid #ced4da;
             border-radius: 6px;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             margin-top: 15px;
             transition: all 0.2s;
@@ -211,8 +211,20 @@
         }
         
         .reset-btn:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary);
+        }
+
+        .clear-btn {
+            background-color: transparent;
+            color: var(--danger);
+            border: 2px solid var(--danger);
+        }
+
+        .clear-btn:hover {
             background-color: var(--danger);
             color: white;
+            border-color: var(--danger);
         }
     </style>
 </head>
@@ -269,6 +281,8 @@
                 </div>
             </div>
         </div>
+        
+        <button class="reset-btn" style="background-color: #fff3bf; border-color: #fab005; color: #d9480f; margin-top: 10px;" onclick="resetRates()">Reset Rates to 0 🔄</button>
     </div>
 
     <div class="box sticky-results">
@@ -299,7 +313,7 @@
             </div>
         </div>
 
-        <button class="reset-btn" onclick="clearAllData()">Clear All Data</button>
+        <button class="reset-btn clear-btn" onclick="clearAllData()">Clear All Data</button>
     </div>
 
 </div>
@@ -348,6 +362,15 @@
             });
         });
     };
+
+    // --- NEW RESET RATES FUNCTION ---
+    function resetRates() {
+        if(confirm("Reset all rates to 0?")) {
+            document.getElementById('rate24k').value = '';
+            document.getElementById('rate22k').value = '';
+            handleInput();
+        }
+    }
 
     // 3. Dynamic Field Handlers (Purity Snapping)
     function handleTypeChange(isUserInteraction = true) {
